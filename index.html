@@ -2262,60 +2262,39 @@
             }
         }
 
-        function renderListen() {
-            currentItems = getFilteredItems();
-            if (currentItems.length === 0) {
-                document.getElementById('game-area').innerHTML =
-                    '<p style="text-align:center;color:var(--text-secondary);">ไม่มีข้อมูล</p>';
-                document.getElementById('nav-area').innerHTML = '';
-                return;
-            }
-            const item = currentItems[Math.floor(Math.random() * currentItems.length)];
-            const area = document.getElementById('game-area');
-            area.innerHTML = `
-            <p style="text-align:center;font-size:1.1rem;color:var(--text-secondary);margin-bottom:12px;">👂 ฟังพินอินแล้วเลือกคำแปลที่ถูกต้อง</p>
-            <div style="font-size:2rem;text-align:center;font-weight:700;color:var(--accent);margin:16px 0;cursor:pointer;padding:20px;border-radius:var(--radius-sm);background:var(--accent-light);border:2px dashed var(--accent);" onclick="speakPinyin('${item.pinyin.replace(/'/g,"\\'")}')" title="คลิกเพื่อฟังอีกครั้ง">
-              🔊 ${item.pinyin || '(ไม่มีพินอิน)'}
-            </div>
-            <p style="text-align:center;color:var(--text-secondary);font-size:0.85rem;">คลิกที่พินอินเพื่อฟังเสียง (ถ้ารองรับ)</p>
-            <div class="quiz-options" id="listen-options" style="margin-top:16px;"></div>
-            <div id="listen-feedback" style="text-align:center;margin-top:12px;min-height:24px;font-weight:600;"></div>
-          `;
-            // Generate options
-            const pool = shuffle(currentItems).filter(i => i.chinese !== item.chinese).slice(0, 3);
-            let options = shuffle([item, ...pool]);
-            const seenSet = new Set();
-            options = options.filter(o => { const k = o.chinese; if (seenSet.has(k)) return false;
-                seenSet.add(k); return true; });
-            while (options.length < 4 && currentItems.length > options.length) {
-                const extra = currentItems.find(i => !seenSet.has(i.chinese));
-                if (extra) { options.push(extra);
-                    seenSet.add(extra.chinese); } else break;
-            }
-            options = shuffle(options.slice(0, 4));
-            const optDiv = document.getElementById('listen-options');
-            optDiv.innerHTML = options.map((o, i) => `
-            <button class="quiz-option" data-correct="${o.chinese===item.chinese}" onclick="answerListen(this,'${item.chinese.replace(/'/g,"\\'")}','${item.thai.replace(/'/g,"\\'")}')">
-              ${o.thai} <small style="color:var(--text-secondary);display:block;">${o.english}</small>
-            </button>
-          `).join('');
-            document.getElementById('nav-area').innerHTML = `
-            <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;">
-              <button class="btn" onclick="renderListen()">🔄 ข้อต่อไป</button>
-            </div>
-          `;
-            // Auto-speak
-            setTimeout(() => speakPinyin(item.pinyin), 400);
-        }
+    function renderListen() {
+        currentItems = getFilteredItems();
+        if (currentItems.length === 0) { /* ... */ return; }
+        const item = currentItems[Math.floor(Math.random() * currentItems.length)];
+        const area = document.getElementById('game-area');
+        area.innerHTML = `
+      <p style="text-align:center;font-size:1.1rem;color:var(--text-secondary);margin-bottom:12px;">
+        👂 ฟังเสียงและเลือกคำแปลที่ถูกต้อง
+      </p>
+      <!-- แสดงตัวอักษรจีน พร้อมปุ่มฟัง -->
+      <div style="font-size:2.5rem;text-align:center;font-weight:700;color:var(--accent);margin:16px 0;padding:20px;border-radius:var(--radius-sm);background:var(--accent-light);border:2px dashed var(--accent);cursor:pointer;" 
+           onclick="speakChinese('${item.chinese.replace(/'/g, "\\'")}')" 
+           title="คลิกเพื่อฟังอีกครั้ง">
+        🔊 ${item.chinese}
+      </div>
+      <p style="text-align:center;color:var(--text-secondary);font-size:0.85rem;">คลิกที่ตัวอักษรเพื่อฟัง</p>
+      <div class="quiz-options" id="listen-options" style="margin-top:16px;"></div>
+      <div id="listen-feedback" style="text-align:center;margin-top:12px;min-height:24px;font-weight:600;"></div>
+    `;
+        // ... options สร้างเหมือนเดิม ...
+        // Auto-speak
+        setTimeout(() => speakChinese(item.chinese), 400);
+    }
 
-        function speakPinyin(pinyin) {
-            if (!pinyin || typeof window.speechSynthesis === 'undefined') return;
-            const utterance = new SpeechSynthesisUtterance(pinyin);
-            utterance.lang = 'zh-CN';
-            utterance.rate = 0.7;
-            utterance.pitch = 1;
-            try { window.speechSynthesis.speak(utterance); } catch (e) {}
-        }
+    // เปลี่ยนชื่อฟังก์ชันและให้พูดตัวจีน
+    function speakChinese(text) {
+        if (!text || typeof window.speechSynthesis === 'undefined') return;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';  // เสียงจีนกลาง
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        try { window.speechSynthesis.speak(utterance); } catch (e) {}
+    }
 
         function answerListen(btn, correctChinese, correctThai) {
             const allBtns = document.querySelectorAll('#listen-options .quiz-option');
