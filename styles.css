@@ -582,44 +582,110 @@ button:active { transform: scale(0.97); }
 }
 
 /* ============================================================
-   Matching grid
+   Matching — two-section board (Chinese top, meanings bottom)
    ============================================================ */
-.matching-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
+.matching-board {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     width: 100%;
 }
-@media (min-width: 500px) {
-    .matching-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+.match-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.match-section-title {
+    font-size: 0.7rem;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+    padding: 0 12px;
+}
+/* Hairline rule on either side of the title */
+.match-section-title::before,
+.match-section-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 22%;
+    height: 1px;
+    background: var(--line);
+}
+.match-section-title::before { left: 12%; }
+.match-section-title::after  { right: 12%; }
+
+.match-section-title .cn {
+    font-family: var(--font-cn-display);
+    font-size: 0.95rem;
+    color: var(--vermilion);
+    letter-spacing: 0.05em;
+    margin-right: 6px;
+}
+
+.chinese-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.meaning-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
 }
 
 .match-card {
-    aspect-ratio: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 8px 6px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--line-strong);
     background: var(--surface);
     cursor: pointer;
-    font-weight: 600;
     text-align: center;
-    font-size: 1.4rem;
     transition: all 0.15s ease;
-    font-family: var(--font-cn);
     color: var(--ink);
     word-break: break-word;
     line-height: 1.2;
     position: relative;
 }
+
+.match-card.chinese {
+    min-height: 56px;
+    font-family: var(--font-cn);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
 .match-card.meaning {
-    font-size: 0.78rem;
+    min-height: 60px;
     font-family: var(--font-th);
-    color: var(--ink-soft);
+    padding: 8px 10px;
+}
+.match-card.meaning .m-th {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink);
     line-height: 1.3;
 }
+.match-card.meaning .m-en {
+    font-size: 0.65rem;
+    font-style: italic;
+    color: var(--ink-faded);
+    margin-top: 2px;
+    font-family: var(--font-th-ui);
+    line-height: 1.25;
+}
+
 .match-card:hover {
     border-color: var(--vermilion);
     background: var(--vermilion-wash);
@@ -628,14 +694,26 @@ button:active { transform: scale(0.97); }
     border-color: var(--vermilion);
     background: var(--vermilion-wash);
     color: var(--vermilion);
-    box-shadow: 0 0 0 2px var(--vermilion-wash);
+    box-shadow: inset 0 0 0 1px var(--vermilion);
 }
+.match-card.selected .m-th { color: var(--vermilion); }
 .match-card.matched {
     border-color: var(--jade);
     background: var(--jade-wash);
     color: var(--jade);
-    opacity: 0.65;
+    opacity: 0.55;
     cursor: default;
+    pointer-events: none;
+}
+.match-card.matched .m-th { color: var(--jade); }
+.match-card.matched::after {
+    content: '✓';
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    font-size: 0.7rem;
+    color: var(--jade);
+    font-weight: 700;
 }
 .match-card.wrong {
     border-color: var(--crimson);
@@ -646,6 +724,35 @@ button:active { transform: scale(0.97); }
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-3px); }
     75% { transform: translateX(3px); }
+}
+
+/* Tighten game-area padding for matching mode so the board has room */
+.game-area:has(.matching-board) {
+    padding: 16px 12px 12px;
+    justify-content: flex-start;
+}
+
+/* On wider screens, breathe a little more */
+@media (min-width: 500px) {
+    .chinese-row { gap: 8px; }
+    .meaning-row { gap: 8px; }
+    .match-card.chinese { min-height: 64px; font-size: 1.2rem; }
+    .match-card.meaning { min-height: 70px; }
+    .match-card.meaning .m-th { font-size: 0.85rem; }
+    .match-card.meaning .m-en { font-size: 0.72rem; }
+}
+
+.match-progress {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--ink-faded);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+.match-progress .count {
+    color: var(--vermilion);
+    font-family: var(--font-cn-display);
+    font-size: 0.9rem;
 }
 
 /* ============================================================

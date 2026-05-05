@@ -1405,30 +1405,50 @@ function renderMatching() {
         document.getElementById('game-area').innerHTML = '<div class="empty-state"><div class="seal">少</div>ต้องการอย่างน้อย 6 คำศัพท์</div>';
         return;
     }
-    const pool = shuffle(currentItems).slice(0, 8);
+    // Pick 6 pairs (12 cards total) — fits comfortably on a phone screen
+    const pairCount = 6;
+    const pool = shuffle(currentItems).slice(0, pairCount);
     matchingPairs = pool;
     matchingSelected = null;
     matchingMatched = 0;
-    const cards = [];
-    pool.forEach((item, i) => {
-        cards.push({ id: i, text: item.chinese, pairId: i, side: 'chinese', item });
-        cards.push({ id: i+100, text: item.thai + ' / ' + item.english, pairId: i, side: 'meaning', item });
-    });
-    const shuffledCards = shuffle(cards);
+
+    // Build two independent shuffled lists — Chinese on top, meanings on bottom.
+    // pairId is the shared index that links a Chinese card to its meaning.
+    const chineseCards = pool.map((item, i) => ({ pairId: i, text: item.chinese, side: 'chinese', item }));
+    const meaningCards = pool.map((item, i) => ({ pairId: i, item }));
+    const shuffledChinese  = shuffle(chineseCards);
+    const shuffledMeanings = shuffle(meaningCards);
+
     document.getElementById('game-area').innerHTML = `
-        <div class="matching-grid" id="matching-grid">
-            ${shuffledCards.map(c => `
-                <div class="match-card ${c.side==='meaning' ? 'meaning' : ''}" 
-                     data-pair="${c.pairId}" data-side="${c.side}" onclick="selectMatch(this)">
-                    ${c.text}
+        <div class="matching-board">
+            <div class="match-section">
+                <div class="match-section-title"><span class="cn">汉字</span>คำจีน</div>
+                <div class="chinese-row">
+                    ${shuffledChinese.map(c => `
+                        <div class="match-card chinese"
+                             data-pair="${c.pairId}" data-side="chinese"
+                             onclick="selectMatch(this)">${c.text}</div>
+                    `).join('')}
                 </div>
-            `).join('')}
+            </div>
+            <div class="match-section">
+                <div class="match-section-title"><span class="cn">含义</span>ความหมาย</div>
+                <div class="meaning-row">
+                    ${shuffledMeanings.map(c => `
+                        <div class="match-card meaning"
+                             data-pair="${c.pairId}" data-side="meaning"
+                             onclick="selectMatch(this)">
+                            <span class="m-th">${c.item.thai}</span>
+                            <span class="m-en">${c.item.english}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
         </div>
-        <p class="text-center mt-1">จับคู่คำศัพท์กับคำแปล</p>
     `;
     document.getElementById('nav-area').innerHTML = `
-        <button class="btn" onclick="renderMatching()">🔄 เริ่มใหม่</button>
-        <span id="match-status">จับได้: ${matchingMatched}/${pool.length}</span>
+        <button class="btn btn-sm" onclick="renderMatching()">🔄 เริ่มใหม่</button>
+        <span class="match-progress">จับได้ <span class="count" id="match-status">0</span> / ${pairCount}</span>
     `;
 }
 
@@ -1452,7 +1472,8 @@ function selectMatch(card) {
             matchingSelected.classList.remove('selected');
             matchingMatched++;
             recordAnswer(true);
-            document.getElementById('match-status').textContent = `จับได้: ${matchingMatched}/${matchingPairs.length}`;
+            const status = document.getElementById('match-status');
+            if (status) status.textContent = matchingMatched;
             if (matchingMatched === matchingPairs.length) {
                 showToast('🎉 ยินดีด้วย! จับคู่ครบทุกคู่แล้ว!', 'success');
                 setTimeout(renderMatching, 1500);
