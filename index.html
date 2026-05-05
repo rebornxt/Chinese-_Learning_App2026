@@ -2327,15 +2327,59 @@
         setTimeout(() => speakChinese(item.chinese), 400);
     }
 
-    // เปลี่ยนชื่อฟังก์ชันและให้พูดตัวจีน
-    function speakChinese(text) {
-        if (!text || typeof window.speechSynthesis === 'undefined') return;
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'zh-CN';  // เสียงจีนกลาง
-        utterance.rate = 0.8;
-        utterance.pitch = 1;
-        window.speechSynthesis.cancel(); // ยกเลิกเสียงค้างก่อนพูดใหม่
-        try { window.speechSynthesis.speak(utterance); } catch (e) {}
+    // ============ AZURE TTS ============
+    const AZURE_TTS_KEY = '6lWYukkDlSGZgBryI02x5FlMJ2TXYlXIcuLjfGWy4ZBUQMFyrCDjJQQJ99CEACqBBLyXJ3w3AAAYACOGkesW';
+    const AZURE_TTS_REGION = 'southeastasia';
+    const AZURE_TTS_VOICE = 'zh-CN-XiaoxiaoNeural';
+
+    async function speakChinese(text) {
+      if (!text) return;
+      try {
+        // Get access token
+        const tokenRes = await fetch(
+          `https://${AZURE_TTS_REGION}.api.cognitive.microsoft.com/sts/v1.0/issuetoken`,
+          { method: 'POST', headers: { 'Ocp-Apim-Subscription-Key': AZURE_TTS_KEY } }
+        );
+        const token = await tokenRes.text();
+
+        // Build SSML
+        const ssml = `<speak version='1.0' xml:lang='zh-CN'>
+  <voice name='${AZURE_TTS_VOICE}'>
+    <prosody rate='0.9'>${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</prosody>
+  </voice>
+</speak>`;
+
+        // Request audio
+        const audioRes = await fetch(
+          `https://${AZURE_TTS_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/ssml+xml',
+              'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
+              'User-Agent': 'ChineseLearnApp'
+            },
+            body: ssml
+          }
+        );
+        if (!audioRes.ok) throw new Error('TTS error: ' + audioRes.status);
+        const blob = await audioRes.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.onended = () => URL.revokeObjectURL(url);
+        await audio.play();
+      } catch (e) {
+        // Fallback to browser TTS if Azure fails
+        console.warn('Azure TTS failed, falling back:', e);
+        if (typeof window.speechSynthesis !== 'undefined') {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'zh-CN';
+          utterance.rate = 0.8;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+        }
+      }
     }
 
         function answerListen(btn, correctChinese, correctThai) {
