@@ -12,7 +12,7 @@
             --text-secondary: #6b5e4a;
             --accent: #c41e3a;
             --accent-light: #fde8ec;
-            --gold: #b8860b;
+            --gold: #b8860b;h
             --gold-light: #fff8e7;
             --green: #2d8a56;
             --green-light: #e6f5ed;
@@ -2071,6 +2071,10 @@
 
         function selectMatch(card) {
             if (card.classList.contains('matched')) return;
+            // พูดออกเสียงภาษาจีนเมื่อคลิกการ์ดฝั่งจีน
+            if (card.dataset.side === 'chinese') {
+                speakChinese(card.textContent.trim());
+            }
             if (!matchingSelected) {
                 card.classList.add('selected');
                 matchingSelected = card;
@@ -2281,8 +2285,45 @@
       <div class="quiz-options" id="listen-options" style="margin-top:16px;"></div>
       <div id="listen-feedback" style="text-align:center;margin-top:12px;min-height:24px;font-weight:600;"></div>
     `;
-        // ... options สร้างเหมือนเดิม ...
-        // Auto-speak
+        // สร้างตัวเลือก 4 ตัว (ไม่ซ้ำกับ item)
+        const distractors = shuffle(currentItems.filter(i => i.chinese !== item.chinese)).slice(0, 3);
+        let options = shuffle([item, ...distractors]);
+
+        // กันตัวเลือกซ้ำ
+        const seen = new Set();
+        options = options.filter(o => {
+            if (seen.has(o.chinese)) return false;
+            seen.add(o.chinese);
+            return true;
+        });
+
+        // ถ้าไม่ครบ 4 เติมจาก pool
+        while (options.length < 4 && currentItems.length > options.length) {
+            const extra = currentItems.find(i => !seen.has(i.chinese));
+            if (extra) {
+                options.push(extra);
+                seen.add(extra.chinese);
+            } else break;
+        }
+        options = shuffle(options.slice(0, 4));
+
+        const optDiv = document.getElementById('listen-options');
+        optDiv.innerHTML = options.map((o, i) => `
+            <button class="quiz-option"
+                    data-correct="${o.chinese === item.chinese}"
+                    onclick="answerListen(this, '${item.chinese.replace(/'/g, "\\'")}', '${item.thai.replace(/'/g, "\\'")}')">
+                ${o.thai}
+                <small style="color:var(--text-secondary);display:block;">${o.english}</small>
+            </button>
+        `).join('');
+
+        document.getElementById('nav-area').innerHTML = `
+            <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;">
+                <button class="btn" onclick="renderListen()">🔄 ข้อต่อไป</button>
+            </div>
+        `;
+
+        // พูดอัตโนมัติเมื่อโหลดข้อใหม่
         setTimeout(() => speakChinese(item.chinese), 400);
     }
 
@@ -2293,6 +2334,7 @@
         utterance.lang = 'zh-CN';  // เสียงจีนกลาง
         utterance.rate = 0.8;
         utterance.pitch = 1;
+        window.speechSynthesis.cancel(); // ยกเลิกเสียงค้างก่อนพูดใหม่
         try { window.speechSynthesis.speak(utterance); } catch (e) {}
     }
 
