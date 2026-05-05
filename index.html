@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html lang="zh-TH">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>เรียนภาษาจีน | Chinese Learning</title>
+    <meta name="theme-color" content="#FAF5E9">
+    <title>เรียนภาษาจีน · 学</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Optional: Import Chinese fonts for better display -->
+
+    <!-- Fonts: ZCOOL XiaoWei (calligraphic display), Noto Serif SC (Chinese body),
+         Noto Serif/Sans Thai (Thai), Cormorant Garamond (italic pinyin) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
-<header class="app-header">
-    <div class="logo">
-        <span class="logo-icon">学</span>
-        <span class="logo-text">เรียนจีน</span>
-    </div>
-    <div class="header-actions">
-        <button class="btn-filter active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
-        <button class="btn-filter" data-filter="vocab" onclick="setFilter('vocab',this)">คำศัพท์</button>
-        <button class="btn-filter" data-filter="sentence" onclick="setFilter('sentence',this)">ประโยค</button>
-        <button class="btn-theme" onclick="toggleTheme()" aria-label="เปลี่ยนธีม">🌓</button>
-    </div>
-</header>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Serif+Thai:wght@400;600&family=Noto+Sans+Thai:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo">
+            <span class="logo-icon">学</span>
+            <span class="logo-text">เรียนจีน</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-filter active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
+            <button class="btn-filter" data-filter="vocab" onclick="setFilter('vocab',this)">คำศัพท์</button>
+            <button class="btn-filter" data-filter="sentence" onclick="setFilter('sentence',this)">ประโยค</button>
+            <button class="btn-theme" onclick="toggleTheme()" aria-label="เปลี่ยนธีม">🌓</button>
+        </div>
+    </header>
 
     <main class="app-main">
         <!-- Stats Bar -->
@@ -37,7 +42,7 @@
             <button class="mode-tab active" data-mode="quiz" onclick="switchMode('quiz',this)">❓ Quiz</button>
             <button class="mode-tab" data-mode="matching" onclick="switchMode('matching',this)">🀄 จับคู่</button>
             <button class="mode-tab" data-mode="scramble" onclick="switchMode('scramble',this)">🧩 เรียงประโยค</button>
-            <button class="mode-tab" data-mode="listen" onclick="switchMode('listen',this)">👂 ฟังแล้วตอบ</button>
+            <button class="mode-tab" data-mode="listen" onclick="switchMode('listen',this)">👂 ฟัง</button>
         </nav>
 
         <!-- Game Area -->

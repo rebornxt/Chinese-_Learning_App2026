@@ -1244,6 +1244,10 @@ function resetAllStats() {
 }
 
 // ================== AZURE TTS ==================
+// ⚠️ SECURITY WARNING: This API key is exposed to anyone who views page source.
+// 1) ROTATE this key in Azure now (the one below should be considered compromised).
+// 2) For production, move TTS behind a small server proxy and call YOUR endpoint here.
+// 3) Until then, treat this as a development-only setup.
 const AZURE_TTS_KEY = '4nIWvCBoSlCZsK5xVyGFUUGd4qxgr9uJXwPIypXhlNWySpGmy3mVJQQJ99CEACqBBLyXJ3w3AAAYACOGyQPa';      // <-- เปลี่ยนเป็น Key จริงของคุณ
 const AZURE_TTS_REGION = 'southeastasia';          // <-- เปลี่ยน region ถ้าต้องการ
 
@@ -1320,7 +1324,7 @@ async function speakChinese(text) {
 function renderQuiz() {
     currentItems = getFilteredItems();
     if (currentItems.length < 4) {
-        document.getElementById('game-area').innerHTML = '<p class="text-center">ต้องการอย่างน้อย 4 รายการ</p>';
+        document.getElementById('game-area').innerHTML = '<div class="empty-state"><div class="seal">少</div>ต้องการอย่างน้อย 4 รายการ</div>';
         return;
     }
     const pool = shuffle(currentItems);
@@ -1342,14 +1346,13 @@ function renderQuiz() {
     options = shuffle(options.slice(0, 4));
 
     const area = document.getElementById('game-area');
+    const isLong = quizCorrectItem.chinese.length > 4;
     area.innerHTML = `
-        <div style="font-size:2.5rem;font-weight:700;font-family:var(--font-cn);text-align:center;">
-            ${quizCorrectItem.chinese}
+        <div class="quiz-character-wrap${isLong ? ' long' : ''}">
+            <div class="quiz-character${isLong ? ' long' : ''}">${quizCorrectItem.chinese}</div>
         </div>
-        <div class="pinyin-display" id="pinyin-display" style="display:none;text-align:center;margin-top:4px;">
-            ${quizCorrectItem.pinyin || ''}
-        </div>
-        <div style="display:flex;gap:8px;justify-content:center;margin:8px 0;">
+        <div class="pinyin-display hidden" id="pinyin-display">${quizCorrectItem.pinyin || ''}</div>
+        <div class="quiz-controls">
             <button class="btn btn-sm" id="toggle-pinyin-btn" onclick="togglePinyin()">แสดงพินอิน</button>
             <button class="audio-btn" onclick="speakChinese('${quizCorrectItem.chinese.replace(/'/g,"\\'")}')" title="ฟังเสียง">🔊</button>
         </div>
@@ -1358,11 +1361,11 @@ function renderQuiz() {
                 <button class="quiz-option" data-correct="${o.chinese === quizCorrectItem.chinese}"
                     onclick="answerQuiz(this)">
                     ${o.thai}
-                    <small style="display:block;color:var(--color-text-secondary);">${o.english}</small>
+                    <small>${o.english}</small>
                 </button>
             `).join('')}
         </div>
-        <div id="quiz-feedback" class="text-center mt-1" style="min-height:24px;font-weight:600;"></div>
+        <div id="quiz-feedback" class="feedback"></div>
     `;
     document.getElementById('nav-area').innerHTML = `<button class="btn" onclick="renderQuiz()">🔄 ข้อต่อไป</button>`;
 }
@@ -1370,11 +1373,11 @@ function renderQuiz() {
 function togglePinyin() {
     const el = document.getElementById('pinyin-display');
     const btn = document.getElementById('toggle-pinyin-btn');
-    if (el.style.display === 'none') {
-        el.style.display = 'block';
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
         btn.textContent = 'ซ่อนพินอิน';
     } else {
-        el.style.display = 'none';
+        el.classList.add('hidden');
         btn.textContent = 'แสดงพินอิน';
     }
 }
@@ -1391,7 +1394,7 @@ function answerQuiz(btn) {
     });
     const fb = document.getElementById('quiz-feedback');
     fb.textContent = isCorrect ? '✅ ถูกต้อง!' : '❌ ผิด';
-    fb.style.color = isCorrect ? 'var(--color-success)' : 'var(--color-danger)';
+    fb.className = 'feedback ' + (isCorrect ? 'success' : 'error');
     recordAnswer(isCorrect);
 }
 
@@ -1399,7 +1402,7 @@ function answerQuiz(btn) {
 function renderMatching() {
     currentItems = getFilteredItems().filter(i => i.type === 'word');
     if (currentItems.length < 6) {
-        document.getElementById('game-area').innerHTML = '<p class="text-center">ต้องการอย่างน้อย 6 คำศัพท์</p>';
+        document.getElementById('game-area').innerHTML = '<div class="empty-state"><div class="seal">少</div>ต้องการอย่างน้อย 6 คำศัพท์</div>';
         return;
     }
     const pool = shuffle(currentItems).slice(0, 8);
@@ -1471,7 +1474,7 @@ function selectMatch(card) {
 function renderScramble() {
     currentItems = getFilteredItems().filter(i => i.type === 'sentence');
     if (currentItems.length < 2) {
-        document.getElementById('game-area').innerHTML = '<p class="text-center">ต้องการอย่างน้อย 2 ประโยค</p>';
+        document.getElementById('game-area').innerHTML = '<div class="empty-state"><div class="seal">少</div>ต้องการอย่างน้อย 2 ประโยค</div>';
         return;
     }
     scrambleItem = currentItems[Math.floor(Math.random() * currentItems.length)];
@@ -1495,19 +1498,19 @@ function renderScramble() {
     scrambleAnswer = [];
     scrambleWrongCount = 0;
     document.getElementById('game-area').innerHTML = `
-        <p class="text-center">เรียงคำให้เป็นประโยคที่ถูกต้อง</p>
+        <p class="scramble-prompt">เรียงคำให้เป็นประโยคที่ถูกต้อง</p>
         <div class="scramble-answer" id="scramble-answer"></div>
         <div class="scramble-words" id="scramble-words">
             ${scrambleChunks.map((c,i) => `<span class="scramble-chunk" data-idx="${i}" onclick="placeChunk(${i})">${c}</span>`).join('')}
         </div>
-        <div style="display:flex;gap:8px;justify-content:center;margin:8px 0;">
+        <div style="display:flex;gap:8px;justify-content:center;margin:10px 0 4px;">
             <button class="btn btn-sm" onclick="undoChunk()">↩ ถอยหลัง</button>
             <button class="btn btn-sm btn-success" onclick="checkScramble()">✅ ตรวจสอบ</button>
             <button class="btn btn-sm" onclick="renderScramble()">🔄 ใหม่</button>
         </div>
-        <div id="scramble-feedback" class="text-center mt-1" style="min-height:24px;font-weight:600;"></div>
+        <div id="scramble-feedback" class="feedback"></div>
         <div id="scramble-audio" class="hidden text-center">
-            <button class="audio-btn" onclick="speakChinese('${scrambleItem.chinese.replace(/'/g,"\\'")}')">🔊 ฟังประโยค</button>
+            <button class="audio-btn" onclick="speakChinese('${scrambleItem.chinese.replace(/'/g,"\\'")}')">🔊</button>
         </div>
     `;
     document.getElementById('nav-area').innerHTML = '';
@@ -1534,9 +1537,13 @@ function undoChunk() {
 function updateScrambleDisplay() {
     const ansDiv = document.getElementById('scramble-answer');
     if (!ansDiv) return;
+    if (scrambleAnswer.length === 0) {
+        ansDiv.innerHTML = '<span class="empty-hint">วางคำที่นี่...</span>';
+        return;
+    }
     ansDiv.innerHTML = scrambleAnswer.map(w =>
-        `<span class="scramble-chunk" style="background:var(--color-success-light);border-color:var(--color-success);" onclick="removeFromAnswer(${w.idx})">${w.text}</span>`
-    ).join('') || '<span style="color:var(--color-text-secondary);">วางคำที่นี่...</span>';
+        `<span class="scramble-chunk" onclick="removeFromAnswer(${w.idx})">${w.text}</span>`
+    ).join('');
 }
 
 function removeFromAnswer(idx) {
@@ -1552,14 +1559,14 @@ function checkScramble() {
     const fb = document.getElementById('scramble-feedback');
     if (correct) {
         fb.textContent = '✅ ถูกต้อง!';
-        fb.style.color = 'var(--color-success)';
+        fb.className = 'feedback success';
         recordAnswer(true);
         speakChinese(scrambleItem.chinese); // เล่นเสียงเมื่อถูกต้อง
         setTimeout(renderScramble, 1500);
     } else {
         scrambleWrongCount++;
         fb.textContent = `❌ ผิด (${scrambleWrongCount}/3)`;
-        fb.style.color = 'var(--color-danger)';
+        fb.className = 'feedback error';
         recordAnswer(false);
         if (scrambleWrongCount >= 3) {
             fb.textContent = '❌ เฉลย';
@@ -1576,7 +1583,7 @@ function checkScramble() {
 function renderListen() {
     currentItems = getFilteredItems();
     if (currentItems.length < 4) {
-        document.getElementById('game-area').innerHTML = '<p class="text-center">ต้องการอย่างน้อย 4 รายการ</p>';
+        document.getElementById('game-area').innerHTML = '<div class="empty-state"><div class="seal">少</div>ต้องการอย่างน้อย 4 รายการ</div>';
         return;
     }
     const item = currentItems[Math.floor(Math.random() * currentItems.length)];
@@ -1591,20 +1598,19 @@ function renderListen() {
     }
     options = shuffle(options.slice(0, 4));
     document.getElementById('game-area').innerHTML = `
-        <p class="text-center">👂 ฟังเสียงและเลือกคำแปล</p>
-        <div style="font-size:3rem;text-align:center;cursor:pointer;padding:16px;border-radius:12px;background:var(--color-primary-light);border:2px dashed var(--color-primary);"
-             onclick="speakChinese('${item.chinese.replace(/'/g,"\\'")}')">
-            🔊 ${item.chinese}
+        <p class="scramble-prompt">👂 ฟังเสียงและเลือกคำแปล</p>
+        <div class="listen-card" onclick="speakChinese('${item.chinese.replace(/'/g,"\\'")}')">
+            <span class="speaker-icon">🔊</span>${item.chinese}
         </div>
         <div class="quiz-options" id="listen-options">
             ${options.map(o => `
                 <button class="quiz-option" data-correct="${o.chinese === item.chinese}"
                     onclick="answerListen(this, '${item.chinese.replace(/'/g,"\\'")}', '${item.thai.replace(/'/g,"\\'")}')">
-                    ${o.thai} <small style="display:block;color:var(--color-text-secondary);">${o.english}</small>
+                    ${o.thai} <small>${o.english}</small>
                 </button>
             `).join('')}
         </div>
-        <div id="listen-feedback" class="text-center mt-1" style="min-height:24px;font-weight:600;"></div>
+        <div id="listen-feedback" class="feedback"></div>
     `;
     document.getElementById('nav-area').innerHTML = `<button class="btn" onclick="renderListen()">🔄 ข้อต่อไป</button>`;
     // Auto-speak on load
@@ -1623,7 +1629,7 @@ function answerListen(btn, correctChinese, correctThai) {
     });
     const fb = document.getElementById('listen-feedback');
     fb.textContent = isCorrect ? '✅ ถูกต้อง!' : `❌ คำตอบ: ${correctThai}`;
-    fb.style.color = isCorrect ? 'var(--color-success)' : 'var(--color-danger)';
+    fb.className = 'feedback ' + (isCorrect ? 'success' : 'error');
     recordAnswer(isCorrect);
 }
 
@@ -1644,6 +1650,25 @@ function setFilter(filter, btnEl) {
     if (btnEl) btnEl.classList.add('active');
     switchMode(currentMode, document.querySelector(`.mode-tab[data-mode="${currentMode}"]`));
 }
+
+// ================== Theme ==================
+function toggleTheme() {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('cnlearn_theme', next); } catch(e) {}
+}
+
+function loadTheme() {
+    try {
+        const saved = localStorage.getItem('cnlearn_theme');
+        if (saved === 'dark' || saved === 'light') {
+            document.documentElement.setAttribute('data-theme', saved);
+        }
+    } catch(e) {}
+}
+loadTheme();
 
 // ================== Init ==================
 function init() {

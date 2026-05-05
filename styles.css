@@ -1,162 +1,318 @@
-/* ========== Modern Blue & White Theme ========== */
+/* ============================================================
+   墨韵 · Mò Yùn — "Ink Rhyme"
+   A modern Chinese scholar's-desk aesthetic
+   Paper · Ink · Vermilion seal · Gold · Jade
+   ============================================================ */
+
 :root {
-    --bg: #f8f9fa;
-    --surface: #ffffff;
-    --text: #212529;
-    --text-secondary: #6c757d;
-    --primary: #1d3557;
-    --accent: #e63946;
-    --accent-light: #fce4e6;
-    --gold: #e63946;
-    --gold-light: #fce4e6;
-    --success: #2a9d8f;
-    --success-light: #e0f2f1;
-    --danger: #e63946;
-    --danger-light: #fce4e6;
-    --border: #dee2e6;
-    --shadow: 0 1px 4px rgba(0,0,0,0.06);
-    --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
-    --radius: 12px;
-    --radius-sm: 8px;
-    --transition: 0.2s ease;
-    --font-cn: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    --font-th: 'Noto Sans Thai', 'Sarabun', sans-serif;
+    /* Surfaces — rice paper */
+    --paper:        #FAF5E9;
+    --paper-deep:   #F2EBD7;
+    --surface:      #FFFCF5;
+    --surface-warm: #F7EFDC;
+
+    /* Ink */
+    --ink:          #1C1815;
+    --ink-soft:     #4A4039;
+    --ink-faded:    #8A7E70;
+
+    /* Vermilion / 朱砂 — the red seal */
+    --vermilion:        #B8362F;
+    --vermilion-deep:   #8E2925;
+    --vermilion-wash:   #F5E1DD;
+
+    /* Gold / 金 — achievement, prosperity */
+    --gold:        #A8854A;
+    --gold-soft:   #C9A86A;
+    --gold-wash:   #F2EAD6;
+
+    /* Jade / 翡翠 — success, harmony */
+    --jade:        #5B7A5A;
+    --jade-wash:   #E2EBE0;
+
+    /* Crimson — error (different from accent) */
+    --crimson:     #9C2B2B;
+    --crimson-wash:#F4E0DE;
+
+    /* Borders — warm beige hairlines */
+    --line:        #E8DCC1;
+    --line-strong: #D4C39B;
+
+    /* Mapping back to original variable names so script.js works */
+    --bg: var(--paper);
+    --text: var(--ink);
+    --text-secondary: var(--ink-faded);
+    --primary: var(--vermilion);
+    --accent: var(--vermilion);
+    --accent-light: var(--vermilion-wash);
+    --success: var(--jade);
+    --success-light: var(--jade-wash);
+    --danger: var(--crimson);
+    --danger-light: var(--crimson-wash);
+    --border: var(--line);
+
+    /* Aliases for the --color-* names script.js mistakenly uses */
+    --color-success: var(--jade);
+    --color-success-light: var(--jade-wash);
+    --color-danger: var(--crimson);
+    --color-danger-light: var(--crimson-wash);
+    --color-primary: var(--vermilion);
+    --color-primary-light: var(--vermilion-wash);
+    --color-text-secondary: var(--ink-faded);
+
+    /* Form */
+    --shadow-soft:  0 1px 0 var(--line);
+    --shadow-card:  0 1px 0 var(--line), 0 8px 24px -16px rgba(28, 24, 21, 0.12);
+    --shadow-seal:  0 2px 0 var(--vermilion-deep);
+
+    --radius-sm: 6px;
+    --radius:    10px;
+    --radius-lg: 14px;
+
+    /* Type */
+    --font-cn-display: 'ZCOOL XiaoWei', 'Noto Serif SC', 'Songti SC', serif;
+    --font-cn:         'Noto Serif SC', 'Songti SC', 'PingFang SC', serif;
+    --font-th:         'Noto Serif Thai', 'Sarabun', serif;
+    --font-th-ui:      'Noto Sans Thai', 'Sarabun', system-ui, sans-serif;
+    --font-pinyin:     'Cormorant Garamond', 'Noto Serif SC', serif;
 }
 
 [data-theme="dark"] {
-    --bg: #1a1a2e;
-    --surface: #16213e;
-    --text: #e0e0e0;
-    --text-secondary: #9e9e9e;
-    --primary: #457b9d;
-    --accent: #e94560;
-    --accent-light: #3d1a22;
-    --gold: #e94560;
-    --gold-light: #332810;
-    --success: #2a9d8f;
-    --success-light: #1a3325;
-    --danger: #e94560;
-    --danger-light: #3d1a22;
-    --border: #2a3a5c;
+    --paper:        #181410;
+    --paper-deep:   #221C16;
+    --surface:      #1F1A14;
+    --surface-warm: #2A2218;
+
+    --ink:          #F0E6D2;
+    --ink-soft:     #C4B8A1;
+    --ink-faded:    #8A7E68;
+
+    --vermilion:        #D94A3D;
+    --vermilion-deep:   #B8362F;
+    --vermilion-wash:   #3A1F1C;
+
+    --gold:        #D4AF74;
+    --gold-soft:   #B8924E;
+    --gold-wash:   #2E2415;
+
+    --jade:        #7A9979;
+    --jade-wash:   #1F2A1F;
+
+    --crimson:     #D6504C;
+    --crimson-wash:#3A1F1E;
+
+    --line:        #382E22;
+    --line-strong: #4D4030;
 }
 
-/* ========== Reset & Base ========== */
+/* ============================================================
+   Reset & base
+   ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; }
+
 body {
-    font-family: var(--font-th), var(--font-cn), system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    transition: background 0.2s, color 0.2s;
+    font-family: var(--font-th-ui), var(--font-cn), system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    transition: background 0.3s ease, color 0.3s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     display: flex;
     flex-direction: column;
+    /* Subtle paper grain — a layered radial wash */
+    background-image:
+        radial-gradient(at 20% 10%, rgba(168, 133, 74, 0.05) 0%, transparent 50%),
+        radial-gradient(at 85% 90%, rgba(184, 54, 47, 0.04) 0%, transparent 55%);
+    position: relative;
 }
 
-/* ========== Header ========== */
+/* Hairline at the very top — like the top rule of an old Chinese book */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--vermilion) 0%, var(--vermilion) 30%, var(--gold) 30%, var(--gold) 70%, var(--vermilion) 70%);
+    z-index: 100;
+}
+
+button { font-family: inherit; }
+button:active { transform: scale(0.97); }
+
+/* ============================================================
+   Header — paper bar with red seal logo
+   ============================================================ */
 .app-header {
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 8px 14px;
+    border-bottom: 1px solid var(--line);
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    box-shadow: var(--shadow);
     flex-shrink: 0;
     z-index: 10;
+    position: relative;
 }
+
 .logo {
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: var(--accent);
+    gap: 10px;
 }
+
+/* The 印章 — red seal stamp */
 .logo-icon {
-    font-size: 2rem;
-    font-weight: 700;
-    font-family: var(--font-cn);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: var(--vermilion);
+    color: var(--surface);
+    font-family: var(--font-cn-display);
+    font-size: 1.5rem;
+    font-weight: 400;
     line-height: 1;
+    border-radius: 4px;
+    box-shadow: var(--shadow-seal);
+    transform: rotate(-2deg);
+    letter-spacing: 0;
+    /* Subtle imperfection like a real chop */
+    position: relative;
 }
+.logo-icon::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 1px solid rgba(255, 252, 245, 0.25);
+    border-radius: 2px;
+    pointer-events: none;
+}
+
 .logo-text {
-    font-size: 1.1rem;
+    font-family: var(--font-cn-display);
+    font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    color: var(--ink);
+    letter-spacing: 0.02em;
 }
+
 .header-actions {
     display: flex;
-    gap: 5px;
+    gap: 4px;
     align-items: center;
 }
-.btn-filter, .btn-theme {
-    padding: 5px 10px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
-    white-space: nowrap;
-    font-weight: 500;
-}
-.btn-filter.active {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-}
-.btn-theme {
-    padding: 5px 8px;
-    border-radius: 50%;
-    font-size: 0.9rem;
-}
-button:active { transform: scale(0.96); }
 
-/* ========== Main Container ========== */
+.btn-filter {
+    padding: 6px 11px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    font-family: var(--font-th-ui);
+}
+.btn-filter:hover { border-color: var(--vermilion); color: var(--vermilion); }
+.btn-filter.active {
+    background: var(--vermilion);
+    color: var(--surface);
+    border-color: var(--vermilion);
+}
+
+.btn-theme {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    color: var(--ink);
+}
+.btn-theme:hover { border-color: var(--vermilion); }
+
+/* ============================================================
+   Main container
+   ============================================================ */
 .app-main {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    padding: 8px 10px;
+    padding: 12px 12px 14px;
     max-width: 700px;
     margin: 0 auto;
     width: 100%;
 }
 
-/* ========== Stats Bar ========== */
+/* ============================================================
+   Stats — paper cards with hairline rules
+   ============================================================ */
 .stats-bar {
     display: flex;
-    gap: 4px;
-    margin-bottom: 6px;
-    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 10px;
     overflow-x: auto;
+    scrollbar-width: none;
 }
+.stats-bar::-webkit-scrollbar { display: none; }
+
 .stat-card {
     background: var(--surface);
     border-radius: var(--radius-sm);
-    padding: 6px 10px;
+    padding: 8px 12px;
     text-align: center;
-    min-width: 55px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
+    min-width: 62px;
+    border: 1px solid var(--line);
     flex-shrink: 0;
     cursor: default;
+    position: relative;
+    transition: border-color 0.15s ease;
 }
+.stat-card:hover { border-color: var(--line-strong); }
+
+/* A small gold dot in the corner — like a punctuation mark */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold-soft);
+    opacity: 0.5;
+}
+
 .stat-value {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--ink);
     line-height: 1.2;
+    font-family: var(--font-th-ui);
 }
+.stat-card:nth-child(1) .stat-value { color: var(--gold); }       /* Streak — gold */
+.stat-card:nth-child(2) .stat-value { color: var(--jade); }       /* Correct — jade */
+.stat-card:nth-child(4) .stat-value { color: var(--vermilion); }  /* Accuracy — vermilion */
+
 .stat-label {
-    font-size: 0.65rem;
-    color: var(--text-secondary);
+    font-size: 0.62rem;
+    color: var(--ink-faded);
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+    font-weight: 600;
 }
+
 .reset-card {
     cursor: pointer;
     display: flex;
@@ -164,107 +320,270 @@ button:active { transform: scale(0.96); }
     justify-content: center;
     flex-direction: column;
 }
+.reset-card:hover { border-color: var(--crimson); }
+.reset-card:hover .stat-value { color: var(--crimson); }
 
-/* ========== Mode Tabs ========== */
+/* ============================================================
+   Mode tabs — refined pill row
+   ============================================================ */
 .mode-tabs {
     display: flex;
-    gap: 4px;
-    margin-bottom: 8px;
+    gap: 2px;
+    margin-bottom: 12px;
     overflow-x: auto;
-    padding: 3px;
-    background: var(--surface);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
+    padding: 4px;
+    background: var(--surface-warm);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    scrollbar-width: none;
 }
+.mode-tabs::-webkit-scrollbar { display: none; }
+
 .mode-tab {
     flex: 1;
-    min-width: fit-content;
-    padding: 6px 10px;
-    border-radius: 14px;
+    min-width: max-content;
+    padding: 8px 12px;
+    border-radius: 6px;
     border: none;
     background: transparent;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
     cursor: pointer;
-    transition: all 0.15s;
-    font-weight: 500;
-    font-family: inherit;
-    white-space: nowrap;
-}
-.mode-tab.active {
-    background: var(--accent);
-    color: #fff;
+    transition: all 0.2s ease;
     font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+.mode-tab:hover { color: var(--vermilion); }
+.mode-tab.active {
+    background: var(--vermilion);
+    color: var(--surface);
+    box-shadow: 0 1px 0 var(--vermilion-deep);
 }
 
-/* ========== Game Area ========== */
+/* ============================================================
+   Game area — the "page" of the book
+   ============================================================ */
 .game-area {
     background: var(--surface);
     border-radius: var(--radius);
-    padding: 14px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border);
+    padding: 22px 18px 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
-    min-height: 240px;
-    margin-bottom: 4px;
+    min-height: 260px;
+    margin-bottom: 6px;
     justify-content: center;
+    position: relative;
 }
+
+/* Decorative top-and-bottom rule like a Chinese page frame */
+.game-area::before,
+.game-area::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    height: 1px;
+    background: var(--line);
+}
+.game-area::before { top: 10px; }
+.game-area::after  { bottom: 10px; }
+
+/* Tiny vermilion mark, top-right, like a chop */
+.game-area > *:first-child { position: relative; z-index: 1; }
+
 .nav-area {
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
-    padding: 4px 0;
+    padding: 6px 0;
+    align-items: center;
+    color: var(--ink-faded);
+    font-size: 0.78rem;
 }
 
-/* ========== Buttons ========== */
+/* ============================================================
+   Buttons
+   ============================================================ */
 .btn {
-    padding: 6px 14px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
     background: var(--surface);
-    color: var(--text);
+    color: var(--ink);
     cursor: pointer;
-    font-size: 0.8rem;
-    transition: all 0.15s;
-    font-family: inherit;
+    font-size: 0.82rem;
+    transition: all 0.15s ease;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+.btn:hover {
+    border-color: var(--vermilion);
+    color: var(--vermilion);
+    background: var(--vermilion-wash);
+}
+.btn-primary {
+    background: var(--vermilion);
+    color: var(--surface);
+    border-color: var(--vermilion);
+}
+.btn-primary:hover {
+    background: var(--vermilion-deep);
+    border-color: var(--vermilion-deep);
+    color: var(--surface);
+}
+.btn-success {
+    background: var(--jade);
+    color: var(--surface);
+    border-color: var(--jade);
+}
+.btn-success:hover {
+    background: var(--jade);
+    color: var(--surface);
+    filter: brightness(0.92);
+}
+.btn-sm { padding: 6px 12px; font-size: 0.76rem; }
+
+/* ============================================================
+   Quiz — the centered character with red-seal background
+   ============================================================ */
+.quiz-character-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 12px;
+    min-height: 90px;
+}
+
+/* The faint red seal behind the character */
+.quiz-character-wrap::before {
+    content: '';
+    position: absolute;
+    width: 84px;
+    height: 84px;
+    background: var(--vermilion-wash);
+    border: 1.5px solid var(--vermilion);
+    border-radius: 4px;
+    transform: rotate(-3deg);
+    opacity: 0.7;
+    z-index: 0;
+}
+
+.quiz-character {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(2.4rem, 9vw, 3.2rem);
+    font-weight: 700;
+    font-family: var(--font-cn);
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    padding: 0 8px;
+    /* For long sentences, scale down */
+    word-break: break-word;
+    max-width: 100%;
+}
+.quiz-character.long {
+    font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+}
+/* For long sentences, hide the seal background — it would look cramped */
+.quiz-character-wrap.long::before { display: none; }
+
+.pinyin-display {
+    font-family: var(--font-pinyin);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--gold);
+    text-align: center;
+    margin: 6px 0 4px;
+    letter-spacing: 0.04em;
     font-weight: 500;
 }
-.btn:hover { border-color: var(--accent); background: var(--accent-light); }
-.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-success { background: var(--success); color: #fff; border-color: var(--success); }
-.btn-sm { padding: 4px 10px; font-size: 0.75rem; }
 
-/* ========== Quiz ========== */
+.quiz-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin: 6px 0 14px;
+}
+
 .quiz-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
-    margin: 8px 0;
+    margin: 4px 0 6px;
 }
+
 .quiz-option {
-    padding: 10px;
+    padding: 12px 12px;
     border-radius: var(--radius-sm);
-    border: 2px solid var(--border);
+    border: 1px solid var(--line-strong);
     background: var(--surface);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     text-align: left;
-    transition: 0.1s;
-    font-weight: 500;
-    color: var(--text);
+    transition: all 0.15s ease;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--font-th);
+    position: relative;
+    line-height: 1.35;
 }
-.quiz-option:active { border-color: var(--accent); }
-.quiz-option.correct { border-color: var(--success); background: var(--success-light); }
-.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); }
-.pinyin-display { font-size: 0.9rem; color: var(--text-secondary); margin: 4px 0; }
+.quiz-option small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.72rem;
+    color: var(--ink-faded);
+    font-family: var(--font-th-ui);
+    font-weight: 500;
+    font-style: italic;
+}
+.quiz-option:hover {
+    border-color: var(--vermilion);
+    background: var(--vermilion-wash);
+}
+.quiz-option:active { transform: scale(0.98); }
+.quiz-option.correct {
+    border-color: var(--jade);
+    background: var(--jade-wash);
+    color: var(--jade);
+}
+.quiz-option.correct::after {
+    content: '✓';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    color: var(--jade);
+    font-weight: 700;
+}
+.quiz-option.wrong {
+    border-color: var(--crimson);
+    background: var(--crimson-wash);
+    color: var(--crimson);
+}
+.quiz-option.wrong::after {
+    content: '✗';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    color: var(--crimson);
+    font-weight: 700;
+}
 
-/* ========== Matching ========== */
+/* ============================================================
+   Matching grid
+   ============================================================ */
 .matching-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -272,97 +591,254 @@ button:active { transform: scale(0.96); }
     width: 100%;
 }
 @media (min-width: 500px) {
-    .matching-grid { grid-template-columns: repeat(4, 1fr); }
+    .matching-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
 }
+
 .match-card {
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px;
+    padding: 8px;
     border-radius: var(--radius-sm);
-    border: 2px solid var(--border);
+    border: 1px solid var(--line-strong);
     background: var(--surface);
     cursor: pointer;
     font-weight: 600;
     text-align: center;
-    font-size: 1.5rem;
-    transition: 0.1s;
+    font-size: 1.4rem;
+    transition: all 0.15s ease;
     font-family: var(--font-cn);
-    color: var(--text);
+    color: var(--ink);
     word-break: break-word;
+    line-height: 1.2;
+    position: relative;
 }
 .match-card.meaning {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-family: var(--font-th);
+    color: var(--ink-soft);
+    line-height: 1.3;
 }
-.match-card.selected { border-color: var(--accent); background: var(--accent-light); }
-.match-card.matched { border-color: var(--success); background: var(--success-light); opacity: 0.8; }
+.match-card:hover {
+    border-color: var(--vermilion);
+    background: var(--vermilion-wash);
+}
+.match-card.selected {
+    border-color: var(--vermilion);
+    background: var(--vermilion-wash);
+    color: var(--vermilion);
+    box-shadow: 0 0 0 2px var(--vermilion-wash);
+}
+.match-card.matched {
+    border-color: var(--jade);
+    background: var(--jade-wash);
+    color: var(--jade);
+    opacity: 0.65;
+    cursor: default;
+}
+.match-card.wrong {
+    border-color: var(--crimson);
+    background: var(--crimson-wash);
+    animation: shake 0.35s ease;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
 
-/* ========== Scramble ========== */
+/* ============================================================
+   Scramble
+   ============================================================ */
+.scramble-prompt {
+    text-align: center;
+    color: var(--ink-faded);
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
 .scramble-words {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 6px;
     justify-content: center;
-    margin: 6px 0;
+    margin: 8px 0;
 }
+
 .scramble-chunk {
-    padding: 5px 10px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
+    padding: 7px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--line-strong);
     background: var(--surface);
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-family: var(--font-cn);
-    transition: 0.1s;
+    color: var(--ink);
+    transition: all 0.15s ease;
+    font-weight: 600;
 }
-.scramble-chunk.placed { background: var(--success-light); border-color: var(--success); }
+.scramble-chunk:hover {
+    border-color: var(--vermilion);
+    background: var(--vermilion-wash);
+}
+.scramble-chunk.placed {
+    background: var(--paper-deep);
+    border-color: var(--line);
+    color: var(--ink-faded);
+    cursor: default;
+    opacity: 0.4;
+}
+
 .scramble-answer {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 6px;
     justify-content: center;
-    min-height: 38px;
-    padding: 6px;
+    align-items: center;
+    min-height: 50px;
+    padding: 10px;
     border-radius: var(--radius-sm);
-    border: 2px dashed var(--success);
-    background: var(--success-light);
-    margin-bottom: 4px;
+    border: 1px dashed var(--gold-soft);
+    background: var(--gold-wash);
+    margin-bottom: 8px;
+    width: 100%;
+}
+.scramble-answer:empty::before {
+    content: '...';
+    color: var(--ink-faded);
+    font-style: italic;
+    font-size: 0.8rem;
+}
+.scramble-answer .empty-hint {
+    color: var(--ink-faded);
+    font-style: italic;
+    font-size: 0.85rem;
 }
 
-/* ========== Audio Button ========== */
-.audio-btn {
-    background: none;
-    border: none;
-    font-size: 1.8rem;
+/* ============================================================
+   Listen — the speaker card
+   ============================================================ */
+.listen-card {
+    width: 100%;
+    text-align: center;
     cursor: pointer;
-    padding: 2px 6px;
-    color: var(--accent);
+    padding: 22px 14px;
+    border-radius: var(--radius);
+    background: var(--vermilion-wash);
+    border: 1.5px dashed var(--vermilion);
+    color: var(--vermilion);
+    font-size: 1.4rem;
+    font-family: var(--font-cn);
+    margin: 6px 0 12px;
+    transition: all 0.2s ease;
+    font-weight: 700;
 }
-.audio-btn:active { transform: scale(0.9); }
+.listen-card:hover {
+    background: var(--vermilion);
+    color: var(--surface);
+    border-style: solid;
+}
+.listen-card .speaker-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 6px;
+}
 
-/* ========== Toast ========== */
+/* ============================================================
+   Audio button
+   ============================================================ */
+.audio-btn {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--vermilion);
+    transition: all 0.15s ease;
+}
+.audio-btn:hover {
+    background: var(--vermilion);
+    color: var(--surface);
+    border-color: var(--vermilion);
+}
+.audio-btn:active { transform: scale(0.92); }
+
+/* ============================================================
+   Feedback line
+   ============================================================ */
+.feedback {
+    text-align: center;
+    margin-top: 10px;
+    min-height: 22px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: 0.01em;
+}
+.feedback.success { color: var(--jade); }
+.feedback.error   { color: var(--crimson); }
+
+/* ============================================================
+   Toast — the floating chop
+   ============================================================ */
 .toast {
     position: fixed;
     top: 16px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 8px 18px;
-    border-radius: 16px;
-    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 700;
     z-index: 9999;
     animation: toast-in 0.25s ease, toast-out 0.25s ease 1.6s forwards;
     pointer-events: none;
     font-size: 0.85rem;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 6px 20px -6px rgba(28, 24, 21, 0.3);
+    letter-spacing: 0.02em;
 }
-.toast.success { background: var(--success); color: #fff; }
-.toast.error { background: var(--danger); color: #fff; }
-@keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(-16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-@keyframes toast-out { from { opacity: 1; } to { opacity: 0; transform: translateX(-50%) translateY(-16px); } }
+.toast.success { background: var(--jade); color: var(--surface); }
+.toast.error   { background: var(--crimson); color: var(--surface); }
 
-/* ========== Utility ========== */
+@keyframes toast-in  {
+    from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes toast-out {
+    from { opacity: 1; }
+    to   { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
 .hidden { display: none !important; }
 .text-center { text-align: center; }
 .mt-1 { margin-top: 6px; }
+
+/* Empty/insufficient state */
+.empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--ink-faded);
+}
+.empty-state .seal {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: var(--vermilion-wash);
+    color: var(--vermilion);
+    border: 1.5px solid var(--vermilion);
+    border-radius: 4px;
+    font-family: var(--font-cn);
+    font-size: 1.5rem;
+    transform: rotate(-3deg);
+    margin-bottom: 10px;
+}
