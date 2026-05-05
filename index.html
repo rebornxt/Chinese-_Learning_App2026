@@ -9,20 +9,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body data-theme="light">
-    <header class="app-header">
-        <div class="logo">
-            <span class="logo-icon">🐼</span>
-            <span class="logo-text">เรียนจีน</span>
-        </div>
-        <div class="header-actions">
-            <button class="btn-filter active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
-            <button class="btn-filter" data-filter="vocab" onclick="setFilter('vocab',this)">คำศัพท์</button>
-            <button class="btn-filter" data-filter="sentence" onclick="setFilter('sentence',this)">ประโยค</button>
-            <button class="btn-theme" onclick="toggleTheme()" aria-label="เปลี่ยนธีม">🌓</button>
-        </div>
-    </header>
+<header class="app-header">
+    <div class="logo">
+        <span class="logo-icon">学</span>
+        <span class="logo-text">เรียนจีน</span>
+    </div>
+    <div class="header-actions">
+        <button class="btn-filter active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
+        <button class="btn-filter" data-filter="vocab" onclick="setFilter('vocab',this)">คำศัพท์</button>
+        <button class="btn-filter" data-filter="sentence" onclick="setFilter('sentence',this)">ประโยค</button>
+        <button class="btn-theme" onclick="toggleTheme()" aria-label="เปลี่ยนธีม">🌓</button>
+    </div>
+</header>
 
     <main class="app-main">
         <!-- Stats Bar -->
