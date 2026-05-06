@@ -42,8 +42,8 @@
     --tap:       44px;       /* min touch target */
 
     /* Typography */
-    --font-zh-display: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
-    --font-zh-body:    'Noto Serif SC', serif;
+    --font-zh-display: 'Kaiti SC', 'STKaiti', 'KaiTi', '楷体', 'BiauKai', 'DFKai-SB', 'Noto Serif SC', serif;
+    --font-zh-body:    'Kaiti SC', 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
     --font-th:         'Noto Sans Thai', system-ui, sans-serif;
     --font-th-serif:   'Noto Serif Thai', 'Noto Sans Thai', serif;
     --font-pinyin:     'Cormorant Garamond', Georgia, serif;
@@ -134,6 +134,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .logo-icon {
     font-family: var(--font-zh-display);
     font-size: 28px;
+    font-weight: 700;
     color: #fff;
     background: var(--red);
     width: 38px;
@@ -332,6 +333,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .empty-state .seal {
     font-family: var(--font-zh-display);
     font-size: 64px;
+    font-weight: 700;
     color: #fff;
     background: var(--red);
     width: 90px;
@@ -352,12 +354,13 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .quiz-character {
     font-family: var(--font-zh-display);
     font-size: clamp(56px, 16vw, 96px);
+    font-weight: 500;
     line-height: 1;
     color: var(--ink);
     text-align: center;
     padding: 6px 18px;
     position: relative;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
 }
 /* Subtle red brush stroke under the character */
 .quiz-character::after {
@@ -502,8 +505,9 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .match-card.chinese {
     font-family: var(--font-zh-display);
     font-size: clamp(20px, 5vw, 26px);
+    font-weight: 500;
     color: var(--ink);
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 .match-card.meaning {
     font-size: 13px;
@@ -592,6 +596,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .scramble-chunk {
     font-family: var(--font-zh-display);
     font-size: 22px;
+    font-weight: 500;
     background: var(--bg-card);
     border: 1.5px solid var(--border);
     border-radius: var(--radius-sm);
@@ -628,6 +633,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
     text-align: center;
     font-family: var(--font-zh-display);
     font-size: clamp(28px, 7vw, 38px);
+    font-weight: 500;
     cursor: pointer;
     box-shadow: var(--shadow-md), inset 0 0 0 2px var(--gold);
     transition: transform 0.2s ease;
@@ -635,7 +641,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
     align-items: center;
     justify-content: center;
     gap: 14px;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     line-height: 1.2;
     user-select: none;
 }
